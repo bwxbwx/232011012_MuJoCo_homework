@@ -1,0 +1,10 @@
+MuJoCo MPC (MJPC)
+ MuJoCo version 3.2.3
+ Hardware threads:  16
+  physics        :  1
+  render         :  1
+  Planner        :  1
+    planning     :  13
+  Estimator      :  0
+    estimation   :  0
+坐标(0.55, 0.24) | 速度(2.38 km/h)| ^C (394)| 加速度(-2.10 m/s², -2.66 m/s²) 剩余油百分比：98%

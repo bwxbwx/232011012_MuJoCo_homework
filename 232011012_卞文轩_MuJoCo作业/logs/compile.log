@@ -1,0 +1,22 @@
+[0/2] Re-checking globbed directories...
+[2/42] Copying Menagerie and dm_control assets into binary directory
+patching file /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/acrobot/acrobot_modified.xml (read from /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/acrobot/acrobot.xml)
+patching file /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/cartpole/cartpole_modified.xml (read from /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/cartpole/cartpole.xml)
+patching file /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/humanoid/humanoid_modified.xml (read from /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/humanoid/humanoid.xml)
+patching file /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/particle/particle_modified.xml (read from /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/particle/particle.xml)
+patching file /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/swimmer/swimmer_modified.xml (read from /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/swimmer/swimmer.xml)
+patching file /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/walker/walker_modified.xml (read from /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/walker/walker.xml)
+patching file /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/allegro/right_hand_modified.xml (read from /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/allegro/right_hand.xml)
+patching file /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/panda/panda_modified.xml (read from /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/panda/panda.xml)
+patching file /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/quadruped/a1_modified.xml (read from /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/quadruped/a1.xml)
+patching file /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/quadrotor/quadrotor_modified.xml (read from /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/quadrotor/quadrotor.xml)
+patching file /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/common_assets/cube_modified_shadow_reorient.xml (read from /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/common_assets/reorientation_cube.xml)
+patching file /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/rubik/cube_3x3x3_modified.xml (read from /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/rubik/cube_3x3x3.xml)
+patching file /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/rubik/transition_model.xml (read from /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/rubik/cube_3x3x3.xml)
+patching file /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/bimanual/aloha_cartesian.xml (read from /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/bimanual/aloha.xml)
+patching file /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/bimanual/mjx_aloha.xml (read from /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/bimanual/aloha.xml)
+patching file /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/bimanual/mjx_scene.xml (read from /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/bimanual/scene.xml)
+Hunk #1 succeeded at 1 with fuzz 1.
+patching file /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/bimanual/mjx_filtered_cartesian_actuators.xml (read from /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/bimanual/filtered_cartesian_actuators.xml)
+patching file /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/op3/op3_modified.xml (read from /home/bwx/Desktop/3/mujoco_mpc/build/mjpc/tasks/op3/op3.xml)
+[42/42] Linking CXX executable bin/filter_server
