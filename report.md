@@ -196,11 +196,12 @@
 #### 3.3.1 速度表
 
 - 实现思路
+
   1. **仪表盘底盘**：使用 OpenGL 圆环绘制，作为速度表的外框。
   2. **刻度与数字**：通过绘制线段 (`GL_LINES`) 生成刻度线，并使用 `mjGEOM_LABEL` 绘制数字刻度，保证刻度均匀分布。
   3. **速度指针**：根据车辆速度计算百分比 `speed_ratio = speed_kmh / max_speed_kmh`，再转换成指针角度，旋转指针显示实时速度。
   4. **动态更新**：每个渲染帧更新速度指针和数字，实现动态速度显示。
-  
+
 - 代码片段
 
   ```cpp
@@ -370,16 +371,174 @@
 #### 3.3.2 转速表
 
 - 实现思路
-    1. **RPM计算**：根据车辆线速度计算转速 `rpm = speed_ms * 600`，并限定最大值 `max_rpm`。
-    2. **刻度与红区**：绘制转速刻度线和数字。
-    3. **转速指针**：根据转速百分比 `rpm_ratio = rpm / max_rpm`，计算指针角度，旋转显示当前转速。
-    4. **实时更新**：每个渲染帧更新指针位置和数字，实现动态转速显示。
-    
+
+  1. **RPM计算**：根据车辆线速度计算转速 `rpm = speed_ms * 600`，并限定最大值 `max_rpm`。
+  2. **刻度与红区**：绘制转速刻度线和数字。
+  3. **转速指针**：根据转速百分比 `rpm_ratio = rpm / max_rpm`，计算指针角度，旋转显示当前转速。
+  4. **实时更新**：每个渲染帧更新指针位置和数字，实现动态转速显示。
+
 - 代码片段
+
+  ```cpp
+   //=============================================================================
+   //转速表
+   //=============================================================================
+    //计算转速
+  
+    //转速表位置
+    float rpm_pos[3] = {
+      dashboard_pos[0],
+      dashboard_pos[1] + 0.60f,
+      dashboard_pos[2] 
+    };
+  
+    //底盘
+    if (scene->ngeom < scene->maxgeom) {
+      mjvGeom* geom = scene->geoms + scene->ngeom;
+      geom->type = mjGEOM_CYLINDER;
+      geom->size[0] = geom->size[1] = 0.25f;
+      geom->size[2] = 0.002f;
+  
+      geom->pos[0] = rpm_pos[0];
+      geom->pos[1] = rpm_pos[1];
+      geom->pos[2] = rpm_pos[2];
+  
+      for (int j = 0; j < 9; j++)
+        geom->mat[j] = static_cast<float>(dashboard_rot_mat[j]);
+  
+      geom->rgba[0] = 0.64f;
+      geom->rgba[1] = 0.57f;
+      geom->rgba[2] = 0.34f;
+      geom->rgba[3] = 0.45f;
+      scene->ngeom++;
+    }
+  
+    //转速刻度
+    for (int i = 0; i <= 8; i++) {
+      if (scene->ngeom >= scene->maxgeom) break;
+  
+      float angle = -45.0f + 270.0f * (i / 8.0f);
+      float rad = angle * 3.14159f / 180.0f;
+  
+      mjvGeom* geom = scene->geoms + scene->ngeom;
+      geom->type = mjGEOM_LABEL;
+      geom->size[0] = geom->size[1] = geom->size[2] = 0.05f;
+  
+      geom->pos[0] = rpm_pos[0];
+      geom->pos[1] = rpm_pos[1] - 0.28f * cos(rad);
+      geom->pos[2] = rpm_pos[2] + 0.28f * sin(rad);
+  
+      geom->rgba[0] = (i >= 6) ? 1.0f : 0.8f;  
+      geom->rgba[1] = (i >= 6) ? 0.2f : 0.8f;
+      geom->rgba[2] = (i >= 6) ? 0.2f : 0.8f;
+      geom->rgba[3] = 1.0f;
+  
+      char label[8];
+      std::snprintf(label, sizeof(label), "%d", i);
+      std::strncpy(geom->label, label, sizeof(geom->label)-1);
+  
+      scene->ngeom++;
+    }
+  
+    //指针
+    if (scene->ngeom < scene->maxgeom) {
+      mjvGeom* geom = scene->geoms + scene->ngeom;
+      geom->type = mjGEOM_BOX;
+      geom->size[0] = 0.004f;
+      geom->size[1] = 0.11f;
+      geom->size[2] = 0.003f;
+  
+      float angle = -45.0f + 270.0f * rpm_ratio;
+      float rad = angle * 3.14159f / 180.0f;
+  
+      geom->pos[0] = rpm_pos[0];
+      geom->pos[1] = rpm_pos[1] - 0.055f * cos(rad);
+      geom->pos[2] = rpm_pos[2] + 0.055f * sin(rad);
+      geom->rgba[0] = 0.2f;
+      geom->rgba[1] = 1.0f;
+      geom->rgba[2] = 0.2f;
+      geom->rgba[3] = 1.0f;
+  
+      double pointer_angle = angle - 90.0;  
+      double rad_pointer_angle = pointer_angle * 3.14159 / 180.0;
+      double cos_p = cos(rad_pointer_angle);
+      double sin_p = sin(rad_pointer_angle);
+      double pointer_rot_mat[9] = {
+        cos_p, -sin_p, 0,
+        sin_p,  cos_p, 0,
+        0,      0,     1
+      };
+      
+      // 组合旋转
+      double temp_mat[9];
+      for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+          temp_mat[i*3 + j] = 0;
+          for (int k = 0; k < 3; k++) {
+            temp_mat[i*3 + j] += dashboard_rot_mat[i*3 + k] * pointer_rot_mat[k*3 + j];
+          }
+        }
+      }
+      
+      for (int i = 0; i < 9; i++) {
+        geom->mat[i] = static_cast<float>(temp_mat[i]);
+      }
+      
+      geom->rgba[0] = 1.0f;
+      geom->rgba[1] = 0.2f;
+      geom->rgba[2] = 0.2f;
+      geom->rgba[3] = 1.0f;
+  
+      scene->ngeom++;
+    }
+  
+    //数字显示
+    if (scene->ngeom < scene->maxgeom) {
+      mjvGeom* geom = scene->geoms + scene->ngeom;
+      geom->type = mjGEOM_LABEL;
+      geom->size[0] = geom->size[1] = geom->size[2] = 0.06f;
+  
+      geom->pos[0] = rpm_pos[0];
+      geom->pos[1] = rpm_pos[1];
+      geom->pos[2] = rpm_pos[2] - 0.05f;
+  
+      geom->rgba[0] = 0.9f;
+      geom->rgba[1] = 0.9f;
+      geom->rgba[2] = 0.9f;
+      geom->rgba[3] = 1.0f;
+  
+      char rpm_text[16];
+      std::snprintf(rpm_text, sizeof(rpm_text), "%.0f", rpm);
+      std::strncpy(geom->label, rpm_text, sizeof(geom->label)-1);
+  
+      scene->ngeom++;
+    }
+  
+    //RPM 单位
+    if (scene->ngeom < scene->maxgeom) {
+      mjvGeom* geom = scene->geoms + scene->ngeom;
+      geom->type = mjGEOM_LABEL;
+      geom->size[0] = geom->size[1] = geom->size[2] = 0.04f;
+  
+      geom->pos[0] = rpm_pos[0];
+      geom->pos[1] = rpm_pos[1];
+      geom->pos[2] = rpm_pos[2] - 0.10f;
+  
+      geom->rgba[0] = 0.8f;
+      geom->rgba[1] = 0.8f;
+      geom->rgba[2] = 0.8f;
+      geom->rgba[3] = 1.0f;
+  
+      std::strncpy(geom->label, "x1000 rpm", sizeof(geom->label)-1);
+      scene->ngeom++;
+    }
+  ```
+
+  
 
 - 效果展示
 
-    ![rpm_](./screenshots/rpm_.png)
+  ![rpm_](./screenshots/rpm_.png)
 
 ## 四、遇到的问题和解决方案
 
